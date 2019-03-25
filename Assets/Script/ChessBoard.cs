@@ -24,9 +24,7 @@ public class ChessBoard : MonoBehaviour
         return m_Instace;
     }
     
-    
-    
-    
+    private ChessBoard (){}
     
     // Start is called before the first frame update
     Vector3 squareLocations;
@@ -50,6 +48,12 @@ public class ChessBoard : MonoBehaviour
         //does not fail, so return true;
         return true;
     }
+
+    public void generateNewBoard()
+    {
+        //TODO: add logic to generate new board.
+    }
+
 }
 
 struct Square
