@@ -41,8 +41,8 @@ public class ChessBoard : MonoBehaviour
         {
             //Check if the occupying piece has same orientation. 
             if(squares[square.x, square.y].piece.getOrientation() == pieceToMove.getOrientation())
-                //occupied by an enemy. 
-                return true;            
+                //occupied by an friendly. 
+                return false;            
         }
         
         //does not fail, so return true;

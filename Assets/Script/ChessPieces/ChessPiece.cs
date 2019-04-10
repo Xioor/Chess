@@ -45,12 +45,14 @@ public abstract class ChessPiece : MonoBehaviour
         return availMoves;
     }
 
+//TODO: 
     public virtual void movePiece(Vector2Int newPos)
     {
         //Check to see if another piece is already on the square in question. 
         //Move piece to new location.
     }
 
+//TODO: added logic to remove piece and update board.
     public virtual bool KillPiece()
     {
         //Play attack animation 
