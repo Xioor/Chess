@@ -24,29 +24,33 @@ public class ChessBoard : MonoBehaviour
         return m_Instace;
     }
     
-    private ChessBoard (){}
+    private ChessBoard ()
+    {
+        generateNewBoard();
+    }
     
     // Start is called before the first frame update
     Vector3 squareLocations;
     Square[,] squares = new Square[8,8];
 
-    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove)
+    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, bool bAvaiableOnlyIfKillPossible = false)
     {
         //Check if square is in bounds.
         if(square.x > 7 || square.x < 0 || square.y > 7 || square.y < 0)
             return false; //Out of bounds
 
-        //check to see if square is ocupied
-        if(squares[square.x, square.y].isOccupied)
+        Square squareDestination = squares[square.x, square.y];
+
+        if (squareDestination.isOccupied && squareDestination.piece.getOrientation() != pieceToMove.getOrientation())
         {
-            //Check if the occupying piece has same orientation. 
-            if(squares[square.x, square.y].piece.getOrientation() == pieceToMove.getOrientation())
-                //occupied by an friendly. 
-                return false;            
+            return true;
         }
-        
-        //does not fail, so return true;
-        return true;
+        else if(!squareDestination.isOccupied && !bAvaiableOnlyIfKillPossible)
+        {
+            return true; 
+        }
+
+        return false;
     }
 
     public void generateNewBoard()

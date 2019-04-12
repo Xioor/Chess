@@ -4,31 +4,20 @@ using UnityEngine;
 
 public class Pawn : ChessPiece
 {
-    bool firstTurn = true;
+    bool m_bFirstMove = true;
 
     public override List<Vector2Int> getAvailableMoves()
     {
-        List<Vector2Int> availMoves = new List<Vector2Int>();
-
-        //implement logic to get moves. 
-        //Pawns are only able to move forward, two squares on the first turn, and one on subsquent turns. 
-        if(firstTurn)
+        //Pawns are only able to move forward two squares on their first move, and one square forward on their subsquent moves. They can also only kill other pieces
+        //one square forward diagonally to the left or right and they can only do that move while killing opponents piece.
+        List<Vector2Int> availableMoves = new List<Vector2Int>();
+        if (m_bFirstMove)
         {
-            //check two squares in front.
-            Vector2Int newSquare = new Vector2Int(m_PlayerPos.x + 2 * m_PlayerOrientation, m_PlayerPos.y);
-            if(chessBoard.isSquareAvailable(newSquare, this))
-            {
-                availMoves.Add(newSquare);
-            }
+            TryAddingAvailableMove(ref availableMoves, 0, 2, false);
         }
-
-        foreach(Vector2Int squareToCheck in m_MovementOffsets)
-        {
-            if(chessBoard.isSquareAvailable(squareToCheck, this))
-            {
-                availMoves.Add(squareToCheck);
-            }
-        }        
-        return availMoves;
+        TryAddingAvailableMove(ref availableMoves, 0, 1, false);
+        TryAddingAvailableMove(ref availableMoves, 1, 1, true);
+        TryAddingAvailableMove(ref availableMoves, -1, 1, true);
+        return availableMoves;
     }
 }

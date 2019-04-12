@@ -63,4 +63,13 @@ public abstract class ChessPiece : MonoBehaviour
     {
         return m_PlayerOrientation;
     }
+
+    public virtual void TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, bool bAvaiableOnlyIfKillPossible)
+    {
+        Vector2Int newMove = new Vector2Int(m_PlayerPos.x + x * m_PlayerOrientation, m_PlayerPos.y + y * m_PlayerOrientation);
+        if (chessBoard.isSquareAvailable(newMove, this, bAvaiableOnlyIfKillPossible))
+        {
+            availableMoves.Add(newMove);
+        }
+    }
 }
