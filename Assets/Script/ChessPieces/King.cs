@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class King : MonoBehaviour
+public class King : ChessPiece
 {
-    // Start is called before the first frame update
-    void Start()
+       public override PieceType getPieceType()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return PieceType.King;
     }
 }

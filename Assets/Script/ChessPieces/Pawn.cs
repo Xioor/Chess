@@ -5,7 +5,26 @@ using UnityEngine;
 public class Pawn : ChessPiece
 {
     bool m_bFirstMove = true;
+    
+    public override PieceType getPieceType()
+    {
+        return PieceType.Pawn;
+    }
 
+    public override void SetStartInfo(Vector2Int intialPos, int orientaion)
+    {   
+        m_bFirstMove = true;
+        m_StartPos = intialPos;
+        m_PlayerPos = intialPos;
+        m_PlayerOrientation = orientaion;
+        
+        
+        float posX = intialPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = intialPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        
+
+        transform.position = new Vector3(posX, transform.position.y, posZ);        
+    }
     public override List<Vector2Int> getAvailableMoves()
     {
         //Pawns are only able to move forward two squares on their first move, and one square forward on their subsquent moves. They can also only kill other pieces

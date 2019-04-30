@@ -6,12 +6,25 @@ public abstract class ChessPiece : MonoBehaviour
 {
     public bool m_Moveable;   
     protected Vector2Int m_PlayerPos;
-    protected int m_PlayerOrientation; // determines chess forward vector
+    public Vector2Int m_StartPos;
+    protected int m_PlayerOrientation = 1; // determines chess forward vector
+
+    protected PieceType m_Type;
 
     protected ChessBoard chessBoard = ChessBoard.getInstance();
 
     public List<Vector2Int> m_MovementOffsets;
     public List<Vector2Int> m_DirectionVectors;
+
+    public virtual void SetStartInfo(Vector2Int intialPos, int orientaion)
+    {
+        float posX = intialPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = intialPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        
+        transform.position.Set(posX, transform.position.y, posZ);
+        m_PlayerOrientation = orientaion;
+
+    }
 
     public virtual List<Vector2Int> getAvailableMoves()
     {
@@ -62,6 +75,15 @@ public abstract class ChessPiece : MonoBehaviour
     public int getOrientation()
     {
         return m_PlayerOrientation;
+    }
+
+    public Vector2Int getStartPos()
+    {
+        return m_StartPos;
+    }
+    public virtual PieceType getPieceType()
+    {
+        return m_Type;
     }
 
     public virtual void TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, bool bAvaiableOnlyIfKillPossible)

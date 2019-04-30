@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class IngameInput : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    //GameData gameData;
+    ChessPiece m_CurrentChessPiece;
+    int m_CurrentPlayerOrientation;
+
     void Start()
     {
         
@@ -20,7 +26,27 @@ public class IngameInput : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("Object touched");
+                //Check What we hit
+                if(hit.collider.tag == "ChessPiece")
+                {
+                    m_CurrentChessPiece = hit.collider.gameObject.GetComponent<ChessPiece>();
+
+                    List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
+
+
+                    Debug.Log(availMoves);
+                }
+
+                //Check if it is a move 
+                if(hit.collider.tag == "MoveSquare")
+                {
+                   // Get the squares grid location. 
+                   // m_CurrentChessPiece.movePiece();
+                   
+                }
+                
+
+               // Debug.Log("Object touched");
             }
         }
     }

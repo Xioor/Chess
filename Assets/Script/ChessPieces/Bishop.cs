@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bishop : MonoBehaviour
+public class Bishop : ChessPiece
 {
-    // Start is called before the first frame update
-    void Start()
+    public override PieceType getPieceType()
     {
-        
+        return PieceType.Bishop;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

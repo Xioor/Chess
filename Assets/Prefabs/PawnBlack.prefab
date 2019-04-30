@@ -87,9 +87,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1416073289390892819}
   - component: {fileID: 4599281171435282583}
+  - component: {fileID: 8390194189613328295}
   m_Layer: 0
-  m_Name: Pond (Black)
-  m_TagString: Untagged
+  m_Name: PawnBlack
+  m_TagString: ChessPiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,7 +103,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1416073289391389491}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.61, y: 3.04, z: -10.07}
+  m_LocalPosition: {x: 0, y: 3.04, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 1416073289390892817}
@@ -122,3 +123,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.5, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &8390194189613328295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416073289391389491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9262b6a1765b5471d940d530e552054f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Moveable: 1
+  m_StartPos: {x: 0, y: 0}
+  m_MovementOffsets: []
+  m_DirectionVectors: []

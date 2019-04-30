@@ -3,7 +3,11 @@ guid: 56f49526c9102412db499d3e3a36af8a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_WhitePawnPrefab: {fileID: 5608535654562990109, guid: 31f5cddb8e3ab413e96a87069777c5d6,
+      type: 3}
+  - m_BlackPawnPrefab: {fileID: 1416073289391389491, guid: 67d53ce5a73e744cdaebc64e6a1664fa,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
