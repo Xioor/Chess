@@ -81,6 +81,12 @@ public abstract class ChessPiece : MonoBehaviour
     {
         return m_StartPos;
     }
+
+     public Vector2Int getCurrentPos()
+    {
+        return m_PlayerPos;
+    }
+
     public virtual PieceType getPieceType()
     {
         return m_Type;

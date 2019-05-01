@@ -32,11 +32,11 @@ public class Pawn : ChessPiece
         List<Vector2Int> availableMoves = new List<Vector2Int>();
         if (m_bFirstMove)
         {
-            TryAddingAvailableMove(ref availableMoves, 0, 2, false);
+            TryAddingAvailableMove(ref availableMoves, 2, 0, false);
         }
-        TryAddingAvailableMove(ref availableMoves, 0, 1, false);
+        TryAddingAvailableMove(ref availableMoves, 1, 0, false);
         TryAddingAvailableMove(ref availableMoves, 1, 1, true);
-        TryAddingAvailableMove(ref availableMoves, -1, 1, true);
+        TryAddingAvailableMove(ref availableMoves, 1, -1, true);
         return availableMoves;
     }
 }

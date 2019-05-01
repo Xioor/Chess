@@ -33,6 +33,12 @@ public class IngameInput : MonoBehaviour
 
                     List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
 
+                    //Create current move squares
+
+                    if(availMoves != null)
+                    {
+                        ChessBoard.getInstance().DisplayMoveSquares(m_CurrentChessPiece, availMoves);
+                    }
 
                     Debug.Log(availMoves);
                 }
@@ -42,7 +48,7 @@ public class IngameInput : MonoBehaviour
                 {
                    // Get the squares grid location. 
                    // m_CurrentChessPiece.movePiece();
-                   
+                   ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
                 }
                 
 

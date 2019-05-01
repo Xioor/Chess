@@ -18,8 +18,12 @@ public class ChessBoard : MonoBehaviour
     public GameObject m_BlackPawnPrefab;
     public GameObject m_BoardStartPos;
     public GameObject m_BoardEndPos;
+    public GameObject m_AvailableSquarePrefab;
 
     public Vector2 m_SquareSize;
+
+    ChessPiece m_CurrentPieceSelection;
+    List<GameObject> m_AvailbleSquares;
 
     static ChessBoard m_Instace = null;
 
@@ -63,6 +67,48 @@ public class ChessBoard : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void DisplayMoveSquares(ChessPiece currentPiece, List<Vector2Int> SquaresAvail)
+    {
+        if (m_CurrentPieceSelection == currentPiece)
+            return;
+
+        if(m_AvailbleSquares != null)
+        {
+            foreach(GameObject square in m_AvailbleSquares)
+            {
+                Destroy(square);
+            }
+        }   
+        
+        m_AvailbleSquares = new List<GameObject>();
+        m_CurrentPieceSelection = currentPiece;
+
+        foreach(Vector2Int square in SquaresAvail)
+        {
+            GameObject availSquare = Instantiate(m_AvailableSquarePrefab); 
+            availSquare.GetComponent<AvailableSquare>().SetInfo(square);
+
+            float posX = square.x * m_SquareSize.x + m_BoardStartPos.transform.position.x;
+            float posZ = square.y * m_SquareSize.y + m_BoardStartPos.transform.position.z;
+
+            Vector3 squarePos = new Vector3(posX, availSquare.transform.position.y ,posZ);
+            availSquare.transform.position = squarePos;
+
+            m_AvailbleSquares.Add(availSquare);
+        }
+    }
+
+    public void MovePiece(GameObject selectedSquare)
+    {
+        Vector2Int currentPos = m_CurrentPieceSelection.getCurrentPos();
+        Vector2Int moveToPos = selectedSquare.GetComponent<AvailableSquare>().GetInfo();
+        
+        squares[currentPos.x, currentPos.y].removePiece();
+        squares[moveToPos.x, moveToPos.y].setPiece(m_CurrentPieceSelection);
+
+        m_CurrentPieceSelection.movePiece(moveToPos);
     }
 
     public void saveCurrentBoard()
