@@ -25,6 +25,19 @@ public class Pawn : ChessPiece
 
         transform.position = new Vector3(posX, transform.position.y, posZ);        
     }
+
+     public override void movePiece(Vector2Int newPos)
+    {
+        //Check to see if another piece is already on the square in question. 
+        //Move piece to new location.
+        float posX = newPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = newPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        
+        transform.position = new Vector3(posX, transform.position.y, posZ);
+        m_PlayerPos = newPos;
+        m_bFirstMove = false;
+    }
+
     public override List<Vector2Int> getAvailableMoves()
     {
         //Pawns are only able to move forward two squares on their first move, and one square forward on their subsquent moves. They can also only kill other pieces

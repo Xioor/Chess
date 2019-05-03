@@ -63,6 +63,11 @@ public abstract class ChessPiece : MonoBehaviour
     {
         //Check to see if another piece is already on the square in question. 
         //Move piece to new location.
+        float posX = newPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = newPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        
+        transform.position = new Vector3(posX, transform.position.y, posZ);
+        m_PlayerPos = newPos;
     }
 
     //TODO: added logic to remove piece and update board.

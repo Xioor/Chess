@@ -110,7 +110,7 @@ public class ChessBoard : MonoBehaviour
 
         m_CurrentPieceSelection.movePiece(moveToPos);
     }
-
+    
     public void saveCurrentBoard()
     {
         List<BoardLayoutInfo> boardLayout = new List<BoardLayoutInfo>();
