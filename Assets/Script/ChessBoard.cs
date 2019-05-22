@@ -13,14 +13,19 @@ using UnityEngine;
 
 
 public class ChessBoard : MonoBehaviour
-{  
+{
     public GameObject m_WhitePawnPrefab;
     public GameObject m_BlackPawnPrefab;
     public GameObject m_BoardStartPos;
     public GameObject m_BoardEndPos;
+    public GameObject m_DeadPieceWhitePos;
+    public GameObject m_DeadPieceBlackPos;
     public GameObject m_AvailableSquarePrefab;
 
     public Vector2 m_SquareSize;
+
+    public int m_DeadWhitePieces;
+    public int m_DeadBlackPieces;
 
     ChessPiece m_CurrentPieceSelection;
     List<GameObject> m_AvailbleSquares;
@@ -42,14 +47,16 @@ public class ChessBoard : MonoBehaviour
 
     private ChessBoard ()
     {
-       // generateNewBoard();
+        // generateNewBoard();
+        m_DeadWhitePieces = 0;
+        m_DeadBlackPieces = 0;
     }
     
     // Start is called before the first frame update
     Vector3 squareLocations;
     Square[,] squares = new Square[8,8];
 
-    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, bool bAvaiableOnlyIfKillPossible = false)
+    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent)
     {
         //Check if square is in bounds.
         if(square.x > 7 || square.x < 0 || square.y > 7 || square.y < 0)
@@ -57,13 +64,21 @@ public class ChessBoard : MonoBehaviour
 
         Square squareDestination = squares[square.x, square.y];
 
-        if (squareDestination.isOccupied && squareDestination.piece.getOrientation() != pieceToMove.getOrientation())
+        if (squareDestination.isOccupied)
         {
-            return true;
+            if (squareDestination.piece.getOrientation() != pieceToMove.getOrientation() && 
+                pieceMoveRestriction <= PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent)
+            {
+                return true;
+            }
         }
-        else if(!squareDestination.isOccupied && !bAvaiableOnlyIfKillPossible)
+        else
         {
-            return true; 
+            if (pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent ||
+                pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionFree)
+            {
+                return true; 
+            }
         }
 
         return false;
@@ -72,9 +87,13 @@ public class ChessBoard : MonoBehaviour
     public void DisplayMoveSquares(ChessPiece currentPiece, List<Vector2Int> SquaresAvail)
     {
         if (m_CurrentPieceSelection == currentPiece)
+        {
+            ResetAvailableSquares();
             return;
+        }
 
-        if(m_AvailbleSquares != null)
+
+        if (m_AvailbleSquares != null)
         {
             foreach(GameObject square in m_AvailbleSquares)
             {
@@ -100,15 +119,27 @@ public class ChessBoard : MonoBehaviour
         }
     }
 
-    public void MovePiece(GameObject selectedSquare)
+    public void MovePiece(GameObject selectedSquareOrPiece)
     {
         Vector2Int currentPos = m_CurrentPieceSelection.getCurrentPos();
-        Vector2Int moveToPos = selectedSquare.GetComponent<AvailableSquare>().GetInfo();
-        
-        squares[currentPos.x, currentPos.y].removePiece();
+        Vector2Int moveToPos;
+
+        if (selectedSquareOrPiece.GetComponent<ChessPiece>() != null)
+        {
+            moveToPos = selectedSquareOrPiece.GetComponent<ChessPiece>().getCurrentPos();
+        }
+        else
+        {   
+            moveToPos = selectedSquareOrPiece.GetComponent<AvailableSquare>().GetInfo();
+        }
+
+        squares[currentPos.x, currentPos.y].removePiece(false);
+        squares[moveToPos.x, moveToPos.y].removePiece(true);
+
         squares[moveToPos.x, moveToPos.y].setPiece(m_CurrentPieceSelection);
 
         m_CurrentPieceSelection.movePiece(moveToPos);
+        ResetAvailableSquares();
     }
     
     public void saveCurrentBoard()
@@ -173,6 +204,15 @@ public class ChessBoard : MonoBehaviour
             squares[blackPawnPos.x, blackPawnPos.y].setPiece(blackPawnScript);
         }
     }
+
+    public void ResetAvailableSquares()
+    {
+        m_CurrentPieceSelection = null;
+        foreach (GameObject square in m_AvailbleSquares)
+        {
+            Destroy(square);
+        }
+    }
 }
 
 public enum PieceType
@@ -183,6 +223,13 @@ public enum PieceType
     Knight,
     Queen,
     King
+}
+
+public enum PieceMoveRestriction
+{
+    OnlyWhenPositionFreeOrOccupiedByOpponent,
+    OnlyWhenPositionOccupiedByOpponent,
+    OnlyWhenPositionFree
 }
 
 [System.Serializable]
@@ -206,10 +253,36 @@ struct Square
         this.piece = piece;
     }
 
-    public void removePiece()
+    public void removePiece(bool bKill)
     {
+        ChessBoard chessBoard = ChessBoard.getInstance();
+        Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
+        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
+
+        if (isOccupied == true && bKill)
+        {
+            if (piece.getOrientation() == 1)
+            {
+                chessBoard.m_DeadWhitePieces++;
+                piece.transform.position = new Vector3(deadWhitePiecesPosition.x,
+                                                       deadWhitePiecesPosition.y,
+                                                       deadWhitePiecesPosition.z + (chessBoard.m_DeadWhitePieces * chessBoard.m_SquareSize.y / 2));
+            }
+            else
+            {
+                chessBoard.m_DeadBlackPieces++;
+                piece.transform.position = new Vector3(deadBlackPiecesPosition.x,
+                                                       deadBlackPiecesPosition.y,
+                                                       deadBlackPiecesPosition.z + (chessBoard.m_DeadBlackPieces * chessBoard.m_SquareSize.y / 2));
+            }
+            piece.m_Moveable = false;
+        }
         isOccupied = false;
-        piece = null;
+        if (piece != null)
+        {
+            piece.enabled = false;
+            piece = null;
+        }
     }
 }
 

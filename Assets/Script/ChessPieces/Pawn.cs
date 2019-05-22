@@ -23,7 +23,8 @@ public class Pawn : ChessPiece
         float posZ = intialPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
         
 
-        transform.position = new Vector3(posX, transform.position.y, posZ);        
+        transform.position = new Vector3(posX, transform.position.y, posZ);
+        m_Moveable = true;
     }
 
      public override void movePiece(Vector2Int newPos)
@@ -45,11 +46,11 @@ public class Pawn : ChessPiece
         List<Vector2Int> availableMoves = new List<Vector2Int>();
         if (m_bFirstMove)
         {
-            TryAddingAvailableMove(ref availableMoves, 2, 0, false);
+            TryAddingAvailableMove(ref availableMoves, 2, 0, PieceMoveRestriction.OnlyWhenPositionFree);
         }
-        TryAddingAvailableMove(ref availableMoves, 1, 0, false);
-        TryAddingAvailableMove(ref availableMoves, 1, 1, true);
-        TryAddingAvailableMove(ref availableMoves, 1, -1, true);
+        TryAddingAvailableMove(ref availableMoves, 1, 0, PieceMoveRestriction.OnlyWhenPositionFree);
+        TryAddingAvailableMove(ref availableMoves, 1, 1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent);
+        TryAddingAvailableMove(ref availableMoves, 1, -1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent);
         return availableMoves;
     }
 }

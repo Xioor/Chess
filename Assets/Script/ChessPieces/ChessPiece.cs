@@ -23,7 +23,7 @@ public abstract class ChessPiece : MonoBehaviour
         
         transform.position.Set(posX, transform.position.y, posZ);
         m_PlayerOrientation = orientaion;
-
+        m_Moveable = true;
     }
 
     public virtual List<Vector2Int> getAvailableMoves()
@@ -97,10 +97,10 @@ public abstract class ChessPiece : MonoBehaviour
         return m_Type;
     }
 
-    public virtual void TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, bool bAvaiableOnlyIfKillPossible)
+    public virtual void TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, PieceMoveRestriction pieceMoveRestriction)
     {
         Vector2Int newMove = new Vector2Int(m_PlayerPos.x + x * m_PlayerOrientation, m_PlayerPos.y + y * m_PlayerOrientation);
-        if (chessBoard.isSquareAvailable(newMove, this, bAvaiableOnlyIfKillPossible))
+        if (chessBoard.isSquareAvailable(newMove, this, pieceMoveRestriction))
         {
             availableMoves.Add(newMove);
         }

@@ -112,6 +112,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &84041488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 84041489}
+  m_Layer: 0
+  m_Name: DeadPieceWhitePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &84041489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84041488}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.3, y: 1.382165, z: 18.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &131909707
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,15 +277,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f49526c9102412db499d3e3a36af8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CurrentChessPieceSelected: {fileID: 0}
   m_WhitePawnPrefab: {fileID: 5608535654562990109, guid: 31f5cddb8e3ab413e96a87069777c5d6,
     type: 3}
   m_BlackPawnPrefab: {fileID: 1416073289391389491, guid: 67d53ce5a73e744cdaebc64e6a1664fa,
     type: 3}
   m_BoardStartPos: {fileID: 1211150277}
   m_BoardEndPos: {fileID: 131909707}
+  m_DeadPieceWhitePos: {fileID: 84041488}
+  m_DeadPieceBlackPos: {fileID: 902897445}
   m_AvailableSquarePrefab: {fileID: 2847789851911676151, guid: 3c788ee3fa86c42489bd7ddd653244f4,
     type: 3}
   m_SquareSize: {x: 0, y: 0}
+  m_DeadWhitePieces: 0
+  m_DeadBlackPieces: 0
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,12 +367,42 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0.4668672, y: -0, z: -0, w: 0.88432753}
-  m_LocalPosition: {x: 0.2, y: 23.3, z: -20}
+  m_LocalPosition: {x: 0.2, y: 29.74, z: -22.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 55.662003, y: 0, z: 0}
+--- !u!1 &902897445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 902897446}
+  m_Layer: 0
+  m_Name: DeadPieceBlackPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &902897446
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902897445}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.49, y: 1.382165, z: 19.56}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1211150277
 GameObject:
   m_ObjectHideFlags: 0

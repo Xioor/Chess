@@ -29,18 +29,32 @@ public class IngameInput : MonoBehaviour
                 //Check What we hit
                 if(hit.collider.tag == "ChessPiece")
                 {
-                    m_CurrentChessPiece = hit.collider.gameObject.GetComponent<ChessPiece>();
+                    ChessPiece currentChessPiece = hit.collider.gameObject.GetComponent<ChessPiece>();
 
-                    List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
-
-                    //Create current move squares
-
-                    if(availMoves != null)
+                    if (currentChessPiece.m_Moveable)
                     {
-                        ChessBoard.getInstance().DisplayMoveSquares(m_CurrentChessPiece, availMoves);
-                    }
+                        if (m_CurrentChessPiece == null)
+                        {
+                            m_CurrentChessPiece = currentChessPiece;
+                        }
+                        else if (m_CurrentChessPiece.getOrientation() != currentChessPiece.getOrientation())
+                        {
+                            ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
+                            m_CurrentChessPiece = null;
+                            return;
+                        }
 
-                    Debug.Log(availMoves);
+                        List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
+
+                        //Create current move squares
+
+                        if (availMoves != null)
+                        {
+                            ChessBoard.getInstance().DisplayMoveSquares(m_CurrentChessPiece, availMoves);
+                        }
+
+                        Debug.Log(availMoves);
+                    }
                 }
 
                 //Check if it is a move 
@@ -49,10 +63,8 @@ public class IngameInput : MonoBehaviour
                    // Get the squares grid location. 
                    // m_CurrentChessPiece.movePiece();
                    ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
+                   m_CurrentChessPiece = null;
                 }
-                
-
-               // Debug.Log("Object touched");
             }
         }
     }
