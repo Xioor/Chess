@@ -28,7 +28,7 @@ public class ChessBoard : MonoBehaviour
     public int m_DeadBlackPieces;
 
     ChessPiece m_CurrentPieceSelection;
-    List<GameObject> m_AvailbleSquares;
+    public List<GameObject> m_AvailbleSquares;
 
     static ChessBoard m_Instace = null;
 
@@ -86,13 +86,6 @@ public class ChessBoard : MonoBehaviour
 
     public void DisplayMoveSquares(ChessPiece currentPiece, List<Vector2Int> SquaresAvail)
     {
-        if (m_CurrentPieceSelection == currentPiece)
-        {
-            ResetAvailableSquares();
-            return;
-        }
-
-
         if (m_AvailbleSquares != null)
         {
             foreach(GameObject square in m_AvailbleSquares)
@@ -212,6 +205,7 @@ public class ChessBoard : MonoBehaviour
         {
             Destroy(square);
         }
+        m_AvailbleSquares.Clear();
     }
 }
 
@@ -257,7 +251,7 @@ struct Square
     {
         ChessBoard chessBoard = ChessBoard.getInstance();
         Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
-        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
+        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceBlackPos.transform.position;
 
         if (isOccupied == true && bKill)
         {

@@ -18,19 +18,22 @@ public abstract class ChessPiece : MonoBehaviour
 
     public virtual void SetStartInfo(Vector2Int intialPos, int orientaion)
     {
+        m_StartPos = intialPos;
+        m_PlayerPos = intialPos;
+        m_PlayerOrientation = orientaion;
+
         float posX = intialPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
         float posZ = intialPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
-        
-        transform.position.Set(posX, transform.position.y, posZ);
-        m_PlayerOrientation = orientaion;
+
+        transform.position = new Vector3(posX, transform.position.y, posZ);
         m_Moveable = true;
     }
 
     public virtual List<Vector2Int> getAvailableMoves()
     {
-         List<Vector2Int> availMoves = new List<Vector2Int>();
+        List<Vector2Int> availMoves = new List<Vector2Int>();
 
-         foreach(Vector2Int squareToCheck in m_MovementOffsets)
+        foreach(Vector2Int squareToCheck in m_MovementOffsets)
         {
             if(chessBoard.isSquareAvailable(squareToCheck, this))
             {
@@ -87,7 +90,7 @@ public abstract class ChessPiece : MonoBehaviour
         return m_StartPos;
     }
 
-     public Vector2Int getCurrentPos()
+    public Vector2Int getCurrentPos()
     {
         return m_PlayerPos;
     }
@@ -97,12 +100,14 @@ public abstract class ChessPiece : MonoBehaviour
         return m_Type;
     }
 
-    public virtual void TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, PieceMoveRestriction pieceMoveRestriction)
+    public virtual bool TryAddingAvailableMove(ref List<Vector2Int> availableMoves, int x, int y, PieceMoveRestriction pieceMoveRestriction)
     {
         Vector2Int newMove = new Vector2Int(m_PlayerPos.x + x * m_PlayerOrientation, m_PlayerPos.y + y * m_PlayerOrientation);
         if (chessBoard.isSquareAvailable(newMove, this, pieceMoveRestriction))
         {
             availableMoves.Add(newMove);
+            return true;
         }
+        return false;
     }
 }

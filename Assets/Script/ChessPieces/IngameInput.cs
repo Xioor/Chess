@@ -37,17 +37,33 @@ public class IngameInput : MonoBehaviour
                         {
                             m_CurrentChessPiece = currentChessPiece;
                         }
-                        else if (m_CurrentChessPiece.getOrientation() != currentChessPiece.getOrientation())
+                        else if (m_CurrentChessPiece.getOrientation() != currentChessPiece.getOrientation() &&
+                                 m_CurrentChessPiece != hit.collider.gameObject.GetComponent<ChessPiece>())
                         {
-                            ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
+                            List<GameObject> availableSquares = ChessBoard.getInstance().m_AvailbleSquares;
+                            for (int i = 0; i < availableSquares.Count; i++)
+                            {
+                                if (availableSquares[i].GetComponent<AvailableSquare>() != null && hit.collider.gameObject.GetComponent<ChessPiece>() != null)
+                                {
+                                    if (availableSquares[i].GetComponent<AvailableSquare>().GetInfo() == hit.collider.gameObject.GetComponent<ChessPiece>().getCurrentPos())
+                                    {
+                                        ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
+                                        m_CurrentChessPiece = null;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
                             m_CurrentChessPiece = null;
+                            ChessBoard.getInstance().ResetAvailableSquares();
                             return;
                         }
 
                         List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
 
                         //Create current move squares
-
                         if (availMoves != null)
                         {
                             ChessBoard.getInstance().DisplayMoveSquares(m_CurrentChessPiece, availMoves);
@@ -60,8 +76,6 @@ public class IngameInput : MonoBehaviour
                 //Check if it is a move 
                 if(hit.collider.tag == "MoveSquare")
                 {
-                   // Get the squares grid location. 
-                   // m_CurrentChessPiece.movePiece();
                    ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
                    m_CurrentChessPiece = null;
                 }
