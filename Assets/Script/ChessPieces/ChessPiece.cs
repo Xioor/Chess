@@ -40,7 +40,7 @@ public abstract class ChessPiece : MonoBehaviour
 
         foreach(Vector2Int squareToCheck in m_MovementOffsets)
         {
-            if(chessBoard.isSquareAvailable(squareToCheck, this))
+            if(chessBoard.isSquareAvailable(squareToCheck + this.m_PlayerPos, this))
             {
                 availMoves.Add(squareToCheck);
             }
@@ -57,9 +57,15 @@ public abstract class ChessPiece : MonoBehaviour
                 checkDirection = chessBoard.isSquareAvailable(squareToCheck, this);
 
                 if(!checkDirection) {break;}
+                
 
                 availMoves.Add(squareToCheck);
                 i++;
+
+                if(chessBoard.isSquareOccupied(squareToCheck, this))
+                {
+                    break;
+                }
             }
         }
 

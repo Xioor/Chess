@@ -69,6 +69,16 @@ public class ChessBoard : MonoBehaviour
     Vector3 squareLocations;
     Square[,] squares = new Square[8,8];
 
+    public bool isSquareOccupied(Vector2Int square, ChessPiece pieceToMove)
+    {
+        Square squareDestination = squares[square.x, square.y];
+         if (squareDestination.isOccupied)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent)
     {
         //Check if square is in bounds.

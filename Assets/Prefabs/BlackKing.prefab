@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff9528da54cb422b9e9523f79287ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Moveable: 0
+  m_Moveable: 1
   m_StartPos: {x: 0, y: 0}
   m_MovementOffsets:
   - {x: 1, y: 1}
