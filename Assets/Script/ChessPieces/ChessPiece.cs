@@ -16,6 +16,11 @@ public abstract class ChessPiece : MonoBehaviour
     public List<Vector2Int> m_MovementOffsets;
     public List<Vector2Int> m_DirectionVectors;
 
+    public void Start()
+    {
+        chessBoard = ChessBoard.getInstance();
+    }
+
     public virtual void SetStartInfo(Vector2Int intialPos, int orientaion)
     {
         m_StartPos = intialPos;

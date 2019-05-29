@@ -277,10 +277,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f49526c9102412db499d3e3a36af8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CurrentChessPieceSelected: {fileID: 0}
   m_WhitePawnPrefab: {fileID: 5608535654562990109, guid: 31f5cddb8e3ab413e96a87069777c5d6,
     type: 3}
   m_BlackPawnPrefab: {fileID: 1416073289391389491, guid: 67d53ce5a73e744cdaebc64e6a1664fa,
+    type: 3}
+  m_WhiteRookPrefab: {fileID: 4740219978955928743, guid: 63fb23e690978489b97b8b2fd1273468,
+    type: 3}
+  m_BlackRookPrefab: {fileID: 4740219978955928743, guid: e200f3438ab4448949bdf44ed04a8a24,
+    type: 3}
+  m_WhiteBishopPrefab: {fileID: 4740219978955928743, guid: a4805bfca0967435b9421fe348233768,
+    type: 3}
+  m_BlackBishopPrefab: {fileID: 4740219978955928743, guid: dcaa34743a1f843d7a5327d1e3293043,
+    type: 3}
+  m_WhiteKnightPrefab: {fileID: 4740219978955928743, guid: a4805bfca0967435b9421fe348233768,
+    type: 3}
+  m_BlackKnightPrefab: {fileID: 4740219978955928743, guid: a4805bfca0967435b9421fe348233768,
+    type: 3}
+  m_WhiteQueenPrefab: {fileID: 4740219978955928743, guid: a818627ba4d43422f9d8651a27cfe46e,
+    type: 3}
+  m_BlackQueenPrefab: {fileID: 4740219978955928743, guid: 264a85b6ce82843e8a6165522d454cd7,
+    type: 3}
+  m_WhiteKingPrefab: {fileID: 4740219978955928743, guid: 7ee660501cdef43b8830e2a9c29aec01,
+    type: 3}
+  m_BlackKingPrefab: {fileID: 4740219978955928743, guid: 669b19719ca5644289ca96cb0d43712c,
     type: 3}
   m_BoardStartPos: {fileID: 1211150277}
   m_BoardEndPos: {fileID: 131909707}

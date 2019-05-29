@@ -14,8 +14,21 @@ using UnityEngine;
 
 public class ChessBoard : MonoBehaviour
 {
+#region prefabs
     public GameObject m_WhitePawnPrefab;
     public GameObject m_BlackPawnPrefab;
+    public GameObject m_WhiteRookPrefab;
+    public GameObject m_BlackRookPrefab;
+    public GameObject m_WhiteBishopPrefab;
+    public GameObject m_BlackBishopPrefab;
+    public GameObject m_WhiteKnightPrefab;
+    public GameObject m_BlackKnightPrefab;
+    public GameObject m_WhiteQueenPrefab;
+    public GameObject m_BlackQueenPrefab;
+    public GameObject m_WhiteKingPrefab;
+    public GameObject m_BlackKingPrefab;
+#endregion
+ 
     public GameObject m_BoardStartPos;
     public GameObject m_BoardEndPos;
     public GameObject m_DeadPieceWhitePos;
@@ -86,6 +99,13 @@ public class ChessBoard : MonoBehaviour
 
     public void DisplayMoveSquares(ChessPiece currentPiece, List<Vector2Int> SquaresAvail)
     {
+        if (m_CurrentPieceSelection == currentPiece)
+        {
+            ResetAvailableSquares();
+            return;
+        }
+
+
         if (m_AvailbleSquares != null)
         {
             foreach(GameObject square in m_AvailbleSquares)
@@ -196,6 +216,60 @@ public class ChessBoard : MonoBehaviour
             squares[whitePawnPos.x, whitePawnPos.y].setPiece(whitePawnScript);
             squares[blackPawnPos.x, blackPawnPos.y].setPiece(blackPawnScript);
         }
+
+        //Instatiate Rooks
+        InstatiateChessPiece(m_WhiteRookPrefab, 0, 0, 1);
+        InstatiateChessPiece(m_WhiteRookPrefab, 0, 7, 1);
+        InstatiateChessPiece(m_WhiteRookPrefab, 7, 0, -1);
+        InstatiateChessPiece(m_WhiteRookPrefab, 7, 7, -1);
+        
+        //Instatiate Knights
+        InstatiateChessPiece(m_WhiteKnightPrefab, 0, 1, 1);
+        InstatiateChessPiece(m_WhiteKnightPrefab, 0, 6, 1);
+        InstatiateChessPiece(m_BlackKnightPrefab, 7, 1, -1);
+        InstatiateChessPiece(m_BlackKnightPrefab, 7, 6, -1);
+        
+        //Instatiate Bishops
+        InstatiateChessPiece(m_WhiteBishopPrefab, 0, 2, 1);
+        InstatiateChessPiece(m_WhiteBishopPrefab, 0, 5, 1);
+        InstatiateChessPiece(m_BlackBishopPrefab, 7, 2, -1);
+        InstatiateChessPiece(m_BlackBishopPrefab, 7, 5, -1);
+
+        //Instatiate Queens
+        InstatiateChessPiece(m_WhiteQueenPrefab, 0, 3, 1);
+        InstatiateChessPiece(m_BlackQueenPrefab, 7, 3, -1);
+
+        //Instatiate Kings
+        InstatiateChessPiece(m_WhiteKingPrefab, 0, 4, 1);
+        InstatiateChessPiece(m_BlackKingPrefab, 7, 4, -1);
+    }
+
+
+    void InstatiateChessPiece(GameObject m_PiecePrefab, int posX, int posY, int dir)
+    {
+        //Instantiate Pawn object.
+            GameObject PieceObject = Instantiate(m_PiecePrefab); 
+
+            //Set Pawn default values.
+            ChessPiece PieceScript = PieceObject.GetComponent<ChessPiece>();
+            Vector2Int pos = new Vector2Int(posX, posY);
+
+            PieceScript.SetStartInfo(pos, dir);
+
+            squares[pos.x, pos.y].setPiece(PieceScript);
+    }
+
+    void InstatiateChessPiece(GameObject m_PiecePrefab, Vector2Int pos, int dir)
+    {
+        //Instantiate Pawn object.
+            GameObject PieceObject = Instantiate(m_PiecePrefab); 
+
+            //Set Pawn default values.
+            ChessPiece PieceScript = PieceObject.GetComponent<ChessPiece>();
+
+            PieceScript.SetStartInfo(pos, dir);
+
+            squares[pos.x, pos.y].setPiece(PieceScript);
     }
 
     public void ResetAvailableSquares()
@@ -251,7 +325,7 @@ struct Square
     {
         ChessBoard chessBoard = ChessBoard.getInstance();
         Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
-        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceBlackPos.transform.position;
+        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
 
         if (isOccupied == true && bKill)
         {

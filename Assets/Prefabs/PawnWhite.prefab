@@ -59,8 +59,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Moveable: 1
+  m_StartPos: {x: 0, y: 0}
   m_MovementOffsets: []
-  m_DirectionVectors: []
+  m_DirectionVectors:
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: 1}
 --- !u!1 &5608535654562990111
 GameObject:
   m_ObjectHideFlags: 0
