@@ -109,13 +109,6 @@ public class ChessBoard : MonoBehaviour
 
     public void DisplayMoveSquares(ChessPiece currentPiece, List<Vector2Int> SquaresAvail)
     {
-        if (m_CurrentPieceSelection == currentPiece)
-        {
-            ResetAvailableSquares();
-            return;
-        }
-
-
         if (m_AvailbleSquares != null)
         {
             foreach(GameObject square in m_AvailbleSquares)
