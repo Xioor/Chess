@@ -40,7 +40,7 @@ public class ChessBoard : MonoBehaviour
     public int m_DeadWhitePieces;
     public int m_DeadBlackPieces;
 
-    ChessPiece m_CurrentPieceSelection;
+    public ChessPiece m_CurrentPieceSelection;
     public List<GameObject> m_AvailbleSquares;
 
     static ChessBoard m_Instace = null;

@@ -8,12 +8,12 @@ public class IngameInput : MonoBehaviour
     // Start is called before the first frame update
 
     //GameData gameData;
-    ChessPiece m_CurrentChessPiece;
     int m_CurrentPlayerOrientation;
+    ChessBoard m_chessBoard;
 
     void Start()
     {
-        
+        m_chessBoard = ChessBoard.getInstance();
     }
 
     // Update is called once per frame
@@ -33,22 +33,21 @@ public class IngameInput : MonoBehaviour
 
                     if (currentChessPiece.m_Moveable)
                     {
-                        if (m_CurrentChessPiece == null)
+                        if (m_chessBoard.m_CurrentPieceSelection == null || m_chessBoard.m_CurrentPieceSelection.getOrientation() == currentChessPiece.getOrientation())
                         {
-                            m_CurrentChessPiece = currentChessPiece;
+                            m_chessBoard.m_CurrentPieceSelection = currentChessPiece;
                         }
-                        else if (m_CurrentChessPiece.getOrientation() != currentChessPiece.getOrientation() &&
-                                 m_CurrentChessPiece != hit.collider.gameObject.GetComponent<ChessPiece>())
+                        else if (m_chessBoard.m_CurrentPieceSelection.getOrientation() != currentChessPiece.getOrientation() &&
+                                 m_chessBoard.m_CurrentPieceSelection != hit.collider.gameObject.GetComponent<ChessPiece>())
                         {
-                            List<GameObject> availableSquares = ChessBoard.getInstance().m_AvailbleSquares;
+                            List<GameObject> availableSquares = m_chessBoard.m_AvailbleSquares;
                             for (int i = 0; i < availableSquares.Count; i++)
                             {
                                 if (availableSquares[i].GetComponent<AvailableSquare>() != null && hit.collider.gameObject.GetComponent<ChessPiece>() != null)
                                 {
                                     if (availableSquares[i].GetComponent<AvailableSquare>().GetInfo() == hit.collider.gameObject.GetComponent<ChessPiece>().getCurrentPos())
                                     {
-                                        ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
-                                        m_CurrentChessPiece = null;
+                                        m_chessBoard.MovePiece(hit.collider.gameObject);
                                         return;
                                     }
                                 }
@@ -56,17 +55,16 @@ public class IngameInput : MonoBehaviour
                         }
                         else
                         {
-                            m_CurrentChessPiece = null;
-                            ChessBoard.getInstance().ResetAvailableSquares();
+                            m_chessBoard.ResetAvailableSquares();
                             return;
                         }
 
-                        List<Vector2Int> availMoves = m_CurrentChessPiece.getAvailableMoves();
+                        List<Vector2Int> availMoves = m_chessBoard.m_CurrentPieceSelection.getAvailableMoves();
 
                         //Create current move squares
                         if (availMoves != null)
                         {
-                            ChessBoard.getInstance().DisplayMoveSquares(m_CurrentChessPiece, availMoves);
+                            m_chessBoard.DisplayMoveSquares(m_chessBoard.m_CurrentPieceSelection, availMoves);
                         }
 
                         Debug.Log(availMoves);
@@ -76,8 +74,7 @@ public class IngameInput : MonoBehaviour
                 //Check if it is a move 
                 if(hit.collider.tag == "MoveSquare")
                 {
-                   ChessBoard.getInstance().MovePiece(hit.collider.gameObject);
-                   m_CurrentChessPiece = null;
+                    m_chessBoard.MovePiece(hit.collider.gameObject);
                 }
             }
         }
