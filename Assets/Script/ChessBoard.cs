@@ -42,6 +42,7 @@ public class ChessBoard : MonoBehaviour
 
     public ChessPiece m_CurrentPieceSelection;
     public List<GameObject> m_AvailbleSquares;
+    public List<ChessPiece> m_chessPieces;
 
     static ChessBoard m_Instace = null;
 
@@ -64,10 +65,14 @@ public class ChessBoard : MonoBehaviour
         m_DeadWhitePieces = 0;
         m_DeadBlackPieces = 0;
     }
-    
     // Start is called before the first frame update
     Vector3 squareLocations;
     Square[,] squares = new Square[8,8];
+
+    public ChessPiece GetChessPieceInThisSquare(Vector2Int square)
+    {
+        return squares[square.x, square.y].piece;
+    }
 
     public bool isSquareOccupied(Vector2Int square, ChessPiece pieceToMove)
     {
@@ -79,7 +84,7 @@ public class ChessBoard : MonoBehaviour
         return false;
     }
 
-    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent)
+    public bool isSquareAvailable(Vector2Int square, ChessPiece pieceToMove, PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bSameColorOverride = false)
     {
         //Check if square is in bounds.
         if(square.x > 7 || square.x < 0 || square.y > 7 || square.y < 0)
@@ -87,10 +92,26 @@ public class ChessBoard : MonoBehaviour
 
         Square squareDestination = squares[square.x, square.y];
 
+        if (pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionCannotResultInPossibleDeath)
+        {
+            List<Vector2Int> squaresOverride = new List<Vector2Int>();
+            squaresOverride.Add(square);
+            List<Vector2Int> allAvailableMovesFromOpponent = ChessBoard.getInstance().GetAllAvailableMovesFromThisOrientation(pieceToMove.getOrientation() * -1, squaresOverride, true);
+            for (int i = 0; i < allAvailableMovesFromOpponent.Count; i++)
+            {
+                if (allAvailableMovesFromOpponent[i] == square)
+                {
+                    return false;
+                }
+            }
+        }
+
         if (squareDestination.isOccupied)
         {
-            if (squareDestination.piece.getOrientation() != pieceToMove.getOrientation() && 
-                pieceMoveRestriction <= PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent)
+            if ((squareDestination.piece.getOrientation() != pieceToMove.getOrientation() && 
+                (pieceMoveRestriction <= PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent ||
+                 pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionCannotResultInPossibleDeath)) || 
+                 bSameColorOverride)
             {
                 return true;
             }
@@ -98,7 +119,8 @@ public class ChessBoard : MonoBehaviour
         else
         {
             if (pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent ||
-                pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionFree)
+                pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionFree ||
+                pieceMoveRestriction == PieceMoveRestriction.OnlyWhenPositionCannotResultInPossibleDeath)
             {
                 return true; 
             }
@@ -218,6 +240,8 @@ public class ChessBoard : MonoBehaviour
 
             squares[whitePawnPos.x, whitePawnPos.y].setPiece(whitePawnScript);
             squares[blackPawnPos.x, blackPawnPos.y].setPiece(blackPawnScript);
+            m_chessPieces.Add(whitePawnScript);
+            m_chessPieces.Add(blackPawnScript);
         }
 
         //Instatiate Rooks
@@ -260,6 +284,7 @@ public class ChessBoard : MonoBehaviour
             PieceScript.SetStartInfo(pos, dir);
 
             squares[pos.x, pos.y].setPiece(PieceScript);
+            m_chessPieces.Add(PieceScript);
     }
 
     void InstatiateChessPiece(GameObject m_PiecePrefab, Vector2Int pos, int dir)
@@ -284,6 +309,24 @@ public class ChessBoard : MonoBehaviour
         }
         m_AvailbleSquares.Clear();
     }
+
+    public List<Vector2Int> GetAllAvailableMovesFromThisOrientation(int orientation, List<Vector2Int> squaresOverride = default(List<Vector2Int>), bool bSameColorOverride = false)
+    {
+        List<Vector2Int> allAvailableMoves = new List<Vector2Int>();
+        foreach (ChessPiece chessPiece in m_chessPieces)
+        {
+            if (chessPiece.getOrientation() == orientation && chessPiece.m_Moveable)
+            {
+                List<Vector2Int> availableMoves = chessPiece.getAvailableMoves(squaresOverride, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bSameColorOverride);
+                for (int i = 0; i < availableMoves.Count; i++)
+                {
+                    allAvailableMoves.Add(availableMoves[i]);
+                }
+            }
+        }
+
+        return allAvailableMoves;
+    }
 }
 
 public enum PieceType
@@ -300,7 +343,8 @@ public enum PieceMoveRestriction
 {
     OnlyWhenPositionFreeOrOccupiedByOpponent,
     OnlyWhenPositionOccupiedByOpponent,
-    OnlyWhenPositionFree
+    OnlyWhenPositionFree,
+    OnlyWhenPositionCannotResultInPossibleDeath
 }
 
 [System.Serializable]
@@ -328,7 +372,7 @@ struct Square
     {
         ChessBoard chessBoard = ChessBoard.getInstance();
         Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
-        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
+        Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceBlackPos.transform.position;
 
         if (isOccupied == true && bKill)
         {

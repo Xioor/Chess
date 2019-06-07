@@ -29,17 +29,27 @@ public class Pawn : ChessPiece
         m_bFirstMove = false;
     }
 
-    public override List<Vector2Int> getAvailableMoves()
+    public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bSameColorOverride = false)
     {
         //Pawns are only able to move forward two squares on their first move, and one square forward on their subsquent moves. They can also only kill other pieces
         //one square forward diagonally to the left or right and they can only do that move while killing opponents piece.
         List<Vector2Int> availableMoves = new List<Vector2Int>();
-        if (TryAddingAvailableMove(ref availableMoves, 1, 0, PieceMoveRestriction.OnlyWhenPositionFree) && m_bFirstMove)
+
+        if (squaresOverride != null && squaresOverride.Count > 0)
         {
-            TryAddingAvailableMove(ref availableMoves, 2, 0, PieceMoveRestriction.OnlyWhenPositionFree);
+            TryAddingAvailableMove(ref availableMoves, 1, 1, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bSameColorOverride);
+            TryAddingAvailableMove(ref availableMoves, 1, -1, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bSameColorOverride);
         }
-        TryAddingAvailableMove(ref availableMoves, 1, 1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent);
-        TryAddingAvailableMove(ref availableMoves, 1, -1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent);
+        else
+        {
+            if (TryAddingAvailableMove(ref availableMoves, 1, 0, PieceMoveRestriction.OnlyWhenPositionFree) && m_bFirstMove)
+            {
+                TryAddingAvailableMove(ref availableMoves, 2, 0, PieceMoveRestriction.OnlyWhenPositionFree);
+            }
+            TryAddingAvailableMove(ref availableMoves, 1, 1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent, bSameColorOverride);
+            TryAddingAvailableMove(ref availableMoves, 1, -1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent, bSameColorOverride);
+        }
+
         return availableMoves;
     }
 }
