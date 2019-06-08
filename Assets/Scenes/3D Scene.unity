@@ -289,9 +289,9 @@ MonoBehaviour:
     type: 3}
   m_BlackBishopPrefab: {fileID: 4740219978955928743, guid: dcaa34743a1f843d7a5327d1e3293043,
     type: 3}
-  m_WhiteKnightPrefab: {fileID: 4740219978955928743, guid: a4805bfca0967435b9421fe348233768,
+  m_WhiteKnightPrefab: {fileID: 8596605669054250330, guid: dbc41824be6814c709f0b47c01811625,
     type: 3}
-  m_BlackKnightPrefab: {fileID: 4740219978955928743, guid: a4805bfca0967435b9421fe348233768,
+  m_BlackKnightPrefab: {fileID: 8886375243852647757, guid: b026f0564780047b4b79143ae2d0a1ae,
     type: 3}
   m_WhiteQueenPrefab: {fileID: 4740219978955928743, guid: a818627ba4d43422f9d8651a27cfe46e,
     type: 3}
@@ -310,6 +310,9 @@ MonoBehaviour:
   m_SquareSize: {x: 0, y: 0}
   m_DeadWhitePieces: 0
   m_DeadBlackPieces: 0
+  m_CurrentPieceSelection: {fileID: 0}
+  m_AvailbleSquares: []
+  m_chessPieces: []
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
