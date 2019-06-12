@@ -62,6 +62,7 @@ public abstract class ChessPiece : MonoBehaviour
         {
             int i = 1;
             bool checkDirection = true;
+            bool bIgnoreFirstKingCheck = true;
             while(checkDirection)
             {
                 Vector2Int squareToCheck = direction * i + this.m_PlayerPos;
@@ -72,12 +73,36 @@ public abstract class ChessPiece : MonoBehaviour
 
                 availMoves.Add(squareToCheck);
                 i++;
-                
+
                 ChessPiece chessPieceToCheck = chessBoard.GetChessPieceInThisSquare(squareToCheck);
-                if (chessPieceToCheck != null && chessPieceToCheck.getOrientation() == m_PlayerOrientation && bSameColorOverride ||
-                    chessBoard.isSquareOccupied(squareToCheck, this))
+
+                if (chessPieceToCheck != null)
                 {
-                    break;
+                    if (chessBoard.isSquareOccupied(squareToCheck, this))
+                    {
+                        if (chessPieceToCheck.getOrientation() == m_PlayerOrientation && bSameColorOverride)
+                        {
+                            break;
+                        }
+                        else if (chessPieceToCheck.getOrientation() != m_PlayerOrientation)
+                        {
+                            if (bSameColorOverride)
+                            {
+                                if (bIgnoreFirstKingCheck && chessPieceToCheck.getPieceType() == PieceType.King)
+                                {
+                                    bIgnoreFirstKingCheck = false;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break; 
+                            }
+                        }
+                    }
                 }
             }
         }
