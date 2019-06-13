@@ -44,6 +44,9 @@ public class ChessBoard : MonoBehaviour
     public List<GameObject> m_AvailbleSquares;
     public List<ChessPiece> m_chessPieces;
 
+    King m_WhiteKingPiece;
+    King m_BlackKingPiece;
+
     static ChessBoard m_Instace = null;
 
     public static ChessBoard getInstance()
@@ -67,7 +70,7 @@ public class ChessBoard : MonoBehaviour
     }
     // Start is called before the first frame update
     Vector3 squareLocations;
-    Square[,] squares = new Square[8,8];
+    public Square[,] squares = new Square[8,8];
 
     public ChessPiece GetChessPieceInThisSquare(Vector2Int square)
     {
@@ -157,7 +160,7 @@ public class ChessBoard : MonoBehaviour
         }
     }
 
-    public void MovePiece(GameObject selectedSquareOrPiece)
+    public ChessPiece MovePiece(GameObject selectedSquareOrPiece)
     {
         Vector2Int currentPos = m_CurrentPieceSelection.getCurrentPos();
         Vector2Int moveToPos;
@@ -172,12 +175,16 @@ public class ChessBoard : MonoBehaviour
         }
 
         squares[currentPos.x, currentPos.y].removePiece(false);
+        ChessPiece attackedPiece = GetChessPieceInThisSquare(new Vector2Int(moveToPos.x, moveToPos.y));
         squares[moveToPos.x, moveToPos.y].removePiece(true);
 
         squares[moveToPos.x, moveToPos.y].setPiece(m_CurrentPieceSelection);
 
         m_CurrentPieceSelection.movePiece(moveToPos);
+
         ResetAvailableSquares();
+
+        return attackedPiece;
     }
     
     public void saveCurrentBoard()
@@ -267,12 +274,12 @@ public class ChessBoard : MonoBehaviour
         InstatiateChessPiece(m_BlackQueenPrefab, 7, 3, -1);
 
         //Instatiate Kings
-        InstatiateChessPiece(m_WhiteKingPrefab, 0, 4, 1);
-        InstatiateChessPiece(m_BlackKingPrefab, 7, 4, -1);
+        m_WhiteKingPiece = InstatiateChessPiece(m_WhiteKingPrefab, 0, 4, 1).GetComponent<King>();
+        m_BlackKingPiece = InstatiateChessPiece(m_BlackKingPrefab, 7, 4, -1).GetComponent<King>();
     }
 
 
-    void InstatiateChessPiece(GameObject m_PiecePrefab, int posX, int posY, int dir)
+    GameObject InstatiateChessPiece(GameObject m_PiecePrefab, int posX, int posY, int dir)
     {
         //Instantiate Pawn object.
             GameObject PieceObject = Instantiate(m_PiecePrefab); 
@@ -285,6 +292,7 @@ public class ChessBoard : MonoBehaviour
 
             squares[pos.x, pos.y].setPiece(PieceScript);
             m_chessPieces.Add(PieceScript);
+            return PieceScript.gameObject;
     }
 
     void InstatiateChessPiece(GameObject m_PiecePrefab, Vector2Int pos, int dir)
@@ -327,6 +335,22 @@ public class ChessBoard : MonoBehaviour
 
         return allAvailableMoves;
     }
+
+    public bool CheckIfCheck(int orientation)
+    {
+        List<Vector2Int> allOpponentsAvailableMoves = GetAllAvailableMovesFromThisOrientation(orientation * -1);
+
+        for (int i = 0; i < allOpponentsAvailableMoves.Count; i++)
+        {
+            if (orientation == 1 && m_WhiteKingPiece.getCurrentPos() == allOpponentsAvailableMoves[i] ||
+                orientation == -1 && m_BlackKingPiece.getCurrentPos() == allOpponentsAvailableMoves[i])
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 
 public enum PieceType
@@ -356,7 +380,7 @@ struct BoardLayoutInfo
     public int Orientation;
 }
 
-struct Square
+public struct Square
 {
     Vector2Int gridLocation;
     public ChessPiece piece;    

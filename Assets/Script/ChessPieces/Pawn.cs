@@ -21,15 +21,15 @@ public class Pawn : ChessPiece
     {
         //Check to see if another piece is already on the square in question. 
         //Move piece to new location.
-        float posX = newPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
-        float posZ = newPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        float posX = newPos.x * m_chessBoard.m_SquareSize.x + m_chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = newPos.y * m_chessBoard.m_SquareSize.y + m_chessBoard.m_BoardStartPos.transform.position.z;
         
         transform.position = new Vector3(posX, transform.position.y, posZ);
         m_PlayerPos = newPos;
         m_bFirstMove = false;
     }
 
-    public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bSameColorOverride = false)
+    public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bSameColorOverride = false, bool bFirstCheck = false)
     {
         //Pawns are only able to move forward two squares on their first move, and one square forward on their subsquent moves. They can also only kill other pieces
         //one square forward diagonally to the left or right and they can only do that move while killing opponents piece.
@@ -48,6 +48,11 @@ public class Pawn : ChessPiece
             }
             TryAddingAvailableMove(ref availableMoves, 1, 1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent, bSameColorOverride);
             TryAddingAvailableMove(ref availableMoves, 1, -1, PieceMoveRestriction.OnlyWhenPositionOccupiedByOpponent, bSameColorOverride);
+        }
+
+        if (bFirstCheck)
+        {
+            RemoveAvailableMovesIfTheyResultInACheck(ref availableMoves);
         }
 
         return availableMoves;

@@ -15,14 +15,14 @@ public class King : ChessPiece
         m_PlayerPos = intialPos;
         m_PlayerOrientation = orientaion;
 
-        float posX = intialPos.x * chessBoard.m_SquareSize.x + chessBoard.m_BoardStartPos.transform.position.x;
-        float posZ = intialPos.y * chessBoard.m_SquareSize.y + chessBoard.m_BoardStartPos.transform.position.z;
+        float posX = intialPos.x * m_chessBoard.m_SquareSize.x + m_chessBoard.m_BoardStartPos.transform.position.x;
+        float posZ = intialPos.y * m_chessBoard.m_SquareSize.y + m_chessBoard.m_BoardStartPos.transform.position.z;
 
         transform.position = new Vector3(posX, transform.position.y, posZ);
         m_Moveable = true;
     }
 
-    public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bCheckSameColor = false)
+    public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bCheckSameColor = false, bool bFirstCheck = false)
     {
         List<Vector2Int> availableMoves = new List<Vector2Int>();
 

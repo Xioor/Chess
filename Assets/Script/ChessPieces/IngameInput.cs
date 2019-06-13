@@ -59,7 +59,7 @@ public class IngameInput : MonoBehaviour
                             return;
                         }
 
-                        List<Vector2Int> availMoves = m_chessBoard.m_CurrentPieceSelection.getAvailableMoves();
+                        List<Vector2Int> availMoves = m_chessBoard.m_CurrentPieceSelection.getAvailableMoves(null, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, false, true);
 
                         //Create current move squares
                         if (availMoves != null)
