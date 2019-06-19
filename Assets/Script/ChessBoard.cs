@@ -160,7 +160,7 @@ public class ChessBoard : MonoBehaviour
         }
     }
 
-    public ChessPiece MovePiece(GameObject selectedSquareOrPiece)
+    public ChessPiece MovePiece(GameObject selectedSquareOrPiece, bool bFakeMove)
     {
         Vector2Int currentPos = m_CurrentPieceSelection.getCurrentPos();
         Vector2Int moveToPos;
@@ -174,13 +174,13 @@ public class ChessBoard : MonoBehaviour
             moveToPos = selectedSquareOrPiece.GetComponent<AvailableSquare>().GetInfo();
         }
 
-        squares[currentPos.x, currentPos.y].removePiece(false);
+        squares[currentPos.x, currentPos.y].removePiece(false, bFakeMove);
         ChessPiece attackedPiece = GetChessPieceInThisSquare(new Vector2Int(moveToPos.x, moveToPos.y));
-        squares[moveToPos.x, moveToPos.y].removePiece(true);
+        squares[moveToPos.x, moveToPos.y].removePiece(true, bFakeMove);
 
         squares[moveToPos.x, moveToPos.y].setPiece(m_CurrentPieceSelection);
 
-        m_CurrentPieceSelection.movePiece(moveToPos);
+        m_CurrentPieceSelection.movePiece(moveToPos, bFakeMove);
 
         ResetAvailableSquares();
 
@@ -254,8 +254,8 @@ public class ChessBoard : MonoBehaviour
         //Instatiate Rooks
         InstatiateChessPiece(m_WhiteRookPrefab, 0, 0, 1);
         InstatiateChessPiece(m_WhiteRookPrefab, 0, 7, 1);
-        InstatiateChessPiece(m_WhiteRookPrefab, 7, 0, -1);
-        InstatiateChessPiece(m_WhiteRookPrefab, 7, 7, -1);
+        InstatiateChessPiece(m_BlackRookPrefab, 7, 0, -1);
+        InstatiateChessPiece(m_BlackRookPrefab, 7, 7, -1);
         
         //Instatiate Knights
         InstatiateChessPiece(m_WhiteKnightPrefab, 0, 1, 1);
@@ -392,13 +392,13 @@ public struct Square
         this.piece = piece;
     }
 
-    public void removePiece(bool bKill)
+    public void removePiece(bool bKill, bool bFakeKill)
     {
         ChessBoard chessBoard = ChessBoard.getInstance();
         Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
         Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceBlackPos.transform.position;
 
-        if (isOccupied == true && bKill)
+        if (isOccupied == true && bKill && !bFakeKill)
         {
             if (piece.getOrientation() == 1)
             {

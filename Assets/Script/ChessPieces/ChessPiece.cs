@@ -101,7 +101,7 @@ public abstract class ChessPiece : MonoBehaviour
     }
 
     //TODO: 
-    public virtual void movePiece(Vector2Int newPos)
+    public virtual void movePiece(Vector2Int newPos, bool bFakeMove)
     {
         //Check to see if another piece is already on the square in question. 
         //Move piece to new location.
@@ -152,7 +152,7 @@ public abstract class ChessPiece : MonoBehaviour
         {
             Vector2Int oldPosition = getCurrentPos();
             ChessPiece lastChessPieceSelected = m_chessBoard.m_CurrentPieceSelection;
-            ChessPiece killedPiece = m_chessBoard.MovePiece(m_chessBoard.m_AvailbleSquares[i]);
+            ChessPiece killedPiece = m_chessBoard.MovePiece(m_chessBoard.m_AvailbleSquares[i], true);
             Vector2Int destination = getCurrentPos();
 
             m_chessBoard.m_CurrentPieceSelection = m_chessBoard.GetChessPieceInThisSquare(new Vector2Int(destination.x, destination.y));
@@ -163,19 +163,16 @@ public abstract class ChessPiece : MonoBehaviour
                 bDoRemove = true;
             }
 
-            m_chessBoard.squares[destination.x, destination.y].removePiece(false);
+            m_chessBoard.squares[destination.x, destination.y].removePiece(false, true);
             m_chessBoard.squares[oldPosition.x, oldPosition.y].setPiece(this);
-            this.movePiece(oldPosition);
+            this.movePiece(oldPosition, true);
 
             if (killedPiece != null)
             {
-                killedPiece.movePiece(new Vector2Int(destination.x, destination.y));
+                killedPiece.movePiece(new Vector2Int(destination.x, destination.y), true);
                 m_chessBoard.squares[destination.x, destination.y].setPiece(killedPiece);
-                killedPiece.gameObject.transform.SetPositionAndRotation(new Vector3(killedPiece.gameObject.transform.position.x, this.gameObject.transform.position.y, killedPiece.gameObject.transform.position.z), killedPiece.gameObject.transform.rotation);
                 killedPiece.enabled = true;
                 killedPiece.m_Moveable = true;
-
-                int unusedVar = killedPiece.getOrientation() == -1 ? m_chessBoard.m_DeadBlackPieces-- : m_chessBoard.m_DeadWhitePieces--;
             }
 
             if (bDoRemove)

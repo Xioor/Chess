@@ -17,7 +17,7 @@ public class Pawn : ChessPiece
         m_bFirstMove = true;
     }
 
-    public override void movePiece(Vector2Int newPos)
+    public override void movePiece(Vector2Int newPos, bool bFakeMove)
     {
         //Check to see if another piece is already on the square in question. 
         //Move piece to new location.
@@ -26,7 +26,11 @@ public class Pawn : ChessPiece
         
         transform.position = new Vector3(posX, transform.position.y, posZ);
         m_PlayerPos = newPos;
-        m_bFirstMove = false;
+
+        if (!bFakeMove)
+        {
+            m_bFirstMove = false;
+        }
     }
 
     public override List<Vector2Int> getAvailableMoves(List<Vector2Int> squaresOverride = default(List<Vector2Int>), PieceMoveRestriction pieceMoveRestriction = PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bool bSameColorOverride = false, bool bFirstCheck = false)

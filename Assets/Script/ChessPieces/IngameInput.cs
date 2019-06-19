@@ -47,7 +47,7 @@ public class IngameInput : MonoBehaviour
                                 {
                                     if (availableSquares[i].GetComponent<AvailableSquare>().GetInfo() == hit.collider.gameObject.GetComponent<ChessPiece>().getCurrentPos())
                                     {
-                                        m_chessBoard.MovePiece(hit.collider.gameObject);
+                                        m_chessBoard.MovePiece(hit.collider.gameObject, false);
                                         return;
                                     }
                                 }
@@ -74,7 +74,7 @@ public class IngameInput : MonoBehaviour
                 //Check if it is a move 
                 if(hit.collider.tag == "MoveSquare")
                 {
-                    m_chessBoard.MovePiece(hit.collider.gameObject);
+                    m_chessBoard.MovePiece(hit.collider.gameObject, false);
                 }
             }
         }
