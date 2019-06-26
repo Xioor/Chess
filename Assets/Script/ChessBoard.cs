@@ -184,6 +184,7 @@ public class ChessBoard : MonoBehaviour
         squares[moveToPos.x, moveToPos.y].setPiece(m_CurrentPieceSelection);
 
         m_CurrentPieceSelection.movePiece(moveToPos, bFakeMove);
+        int movedPieceOrientation = m_CurrentPieceSelection.getOrientation();
 
         if(!bFakeMove)
         {
@@ -191,6 +192,22 @@ public class ChessBoard : MonoBehaviour
         }
         
         ResetAvailableSquares();
+
+        if (!bFakeMove)
+        {
+            if (CheckIfCheck(movedPieceOrientation * -1))
+            {
+                if (GetAllAvailableMovesFromThisOrientation(movedPieceOrientation * -1, null, false, true).Count == 0)
+                {
+                    GameManger.getInstance().EndGame(movedPieceOrientation);
+                }
+                else
+                {
+                    Debug.Log("check!");
+                }
+            }
+            ResetAvailableSquares();
+        }
 
         return attackedPiece;
     }
@@ -351,14 +368,14 @@ public class ChessBoard : MonoBehaviour
         m_AvailbleSquares.Clear();
     }
 
-    public List<Vector2Int> GetAllAvailableMovesFromThisOrientation(int orientation, List<Vector2Int> squaresOverride = default(List<Vector2Int>), bool bSameColorOverride = false)
+    public List<Vector2Int> GetAllAvailableMovesFromThisOrientation(int orientation, List<Vector2Int> squaresOverride = default(List<Vector2Int>), bool bSameColorOverride = false, bool bRemoveIfCheck = false)
     {
         List<Vector2Int> allAvailableMoves = new List<Vector2Int>();
         foreach (ChessPiece chessPiece in m_chessPieces)
         {
             if (chessPiece.getOrientation() == orientation && chessPiece.m_Moveable)
             {
-                List<Vector2Int> availableMoves = chessPiece.getAvailableMoves(squaresOverride, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bSameColorOverride);
+                List<Vector2Int> availableMoves = chessPiece.getAvailableMoves(squaresOverride, PieceMoveRestriction.OnlyWhenPositionFreeOrOccupiedByOpponent, bSameColorOverride, bRemoveIfCheck);
                 for (int i = 0; i < availableMoves.Count; i++)
                 {
                     allAvailableMoves.Add(availableMoves[i]);
@@ -431,28 +448,31 @@ public struct Square
         Vector3 deadWhitePiecesPosition = chessBoard.m_DeadPieceWhitePos.transform.position;
         Vector3 deadBlackPiecesPosition = chessBoard.m_DeadPieceBlackPos.transform.position;
 
-        if (isOccupied == true && bKill && !bFakeKill)
+        if (isOccupied == true && bKill)
         {
-            if (piece.getOrientation() == 1)
+            if (!bFakeKill)
             {
-                if(!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                if (piece.getOrientation() == 1)
                 {
-                    chessBoard.m_DeadWhitePieces.Add(piece.gameObject);
-                    chessBoard.m_DeadWhitePiecesCount++;
-                    piece.transform.position = new Vector3(deadWhitePiecesPosition.x,
-                                                       deadWhitePiecesPosition.y,
-                                                       deadWhitePiecesPosition.z + (chessBoard.m_DeadWhitePiecesCount * chessBoard.m_SquareSize.y / 2));
-                }                                       
-            }
-            else
-            {
-                if(!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                    if (!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                    {
+                        chessBoard.m_DeadWhitePieces.Add(piece.gameObject);
+                        chessBoard.m_DeadWhitePiecesCount++;
+                        piece.transform.position = new Vector3(deadWhitePiecesPosition.x,
+                                                           deadWhitePiecesPosition.y,
+                                                           deadWhitePiecesPosition.z + (chessBoard.m_DeadWhitePiecesCount * chessBoard.m_SquareSize.y / 2));
+                    }
+                }
+                else
                 {
-                    chessBoard.m_DeadBlackPieces.Add(piece.gameObject);
-                    chessBoard.m_DeadBlackPiecesCount++;
-                    piece.transform.position = new Vector3(deadBlackPiecesPosition.x,
-                                                       deadBlackPiecesPosition.y,
-                                                       deadBlackPiecesPosition.z + (chessBoard.m_DeadBlackPiecesCount * chessBoard.m_SquareSize.y / 2));
+                    if (!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                    {
+                        chessBoard.m_DeadBlackPieces.Add(piece.gameObject);
+                        chessBoard.m_DeadBlackPiecesCount++;
+                        piece.transform.position = new Vector3(deadBlackPiecesPosition.x,
+                                                           deadBlackPiecesPosition.y,
+                                                           deadBlackPiecesPosition.z + (chessBoard.m_DeadBlackPiecesCount * chessBoard.m_SquareSize.y / 2));
+                    }
                 }
             }
             piece.m_Moveable = false;
