@@ -19,6 +19,16 @@ public class IngameInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown( KeyCode.Escape))
+        {
+            GameManger.getInstance().togglePauseState();
+        }
+        
+        if(GameManger.getInstance().GetPauseState() || GameManger.getInstance().GetGameOver())
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -30,6 +40,15 @@ public class IngameInput : MonoBehaviour
                 if(hit.collider.tag == "ChessPiece")
                 {
                     ChessPiece currentChessPiece = hit.collider.gameObject.GetComponent<ChessPiece>();
+
+                    //Check if the player is correct orientation according to GameManager
+                    int playerTurn = GameManger.getInstance().GetPlayerTurn();
+
+                    if(playerTurn != currentChessPiece.getOrientation() && m_chessBoard.m_CurrentPieceSelection == null)
+                    {
+                        //Do nothing
+                        return;
+                    }
 
                     if (currentChessPiece.m_Moveable)
                     {

@@ -37,8 +37,11 @@ public class ChessBoard : MonoBehaviour
 
     public Vector2 m_SquareSize;
 
-    public int m_DeadWhitePieces;
-    public int m_DeadBlackPieces;
+    public int m_DeadWhitePiecesCount;
+
+    public List<GameObject> m_DeadWhitePieces;
+    public int m_DeadBlackPiecesCount;
+    public List<GameObject> m_DeadBlackPieces;
 
     public ChessPiece m_CurrentPieceSelection;
     public List<GameObject> m_AvailbleSquares;
@@ -65,8 +68,8 @@ public class ChessBoard : MonoBehaviour
     private ChessBoard ()
     {
         // generateNewBoard();
-        m_DeadWhitePieces = 0;
-        m_DeadBlackPieces = 0;
+        m_DeadWhitePiecesCount = 0;
+        m_DeadBlackPiecesCount = 0;
     }
     // Start is called before the first frame update
     Vector3 squareLocations;
@@ -182,6 +185,11 @@ public class ChessBoard : MonoBehaviour
 
         m_CurrentPieceSelection.movePiece(moveToPos, bFakeMove);
 
+        if(!bFakeMove)
+        {
+            GameManger.getInstance().SwitchPlayer();
+        }
+        
         ResetAvailableSquares();
 
         return attackedPiece;
@@ -278,7 +286,6 @@ public class ChessBoard : MonoBehaviour
         m_BlackKingPiece = InstatiateChessPiece(m_BlackKingPrefab, 7, 4, -1).GetComponent<King>();
     }
 
-
     GameObject InstatiateChessPiece(GameObject m_PiecePrefab, int posX, int posY, int dir)
     {
         //Instantiate Pawn object.
@@ -306,6 +313,32 @@ public class ChessBoard : MonoBehaviour
             PieceScript.SetStartInfo(pos, dir);
 
             squares[pos.x, pos.y].setPiece(PieceScript);
+    }
+
+    public void ClearCurrentBoard()
+    {
+        //Go through the board and clear the square.   
+        foreach(Square square in squares)
+        {
+            if(square.isOccupied)
+            {
+                //Delete the Game object.
+                Destroy(square.piece.gameObject);
+            }
+        }
+
+        squares = new Square[8,8];
+
+        //Delete object that has been removed from the board.
+        foreach(GameObject piece in m_DeadWhitePieces)
+        {
+            Destroy(piece);
+        }
+
+        foreach(GameObject piece in m_DeadWhitePieces)
+        {
+            Destroy(piece);
+        }
     }
 
     public void ResetAvailableSquares()
@@ -402,17 +435,25 @@ public struct Square
         {
             if (piece.getOrientation() == 1)
             {
-                chessBoard.m_DeadWhitePieces++;
-                piece.transform.position = new Vector3(deadWhitePiecesPosition.x,
+                if(!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                {
+                    chessBoard.m_DeadWhitePieces.Add(piece.gameObject);
+                    chessBoard.m_DeadWhitePiecesCount++;
+                    piece.transform.position = new Vector3(deadWhitePiecesPosition.x,
                                                        deadWhitePiecesPosition.y,
-                                                       deadWhitePiecesPosition.z + (chessBoard.m_DeadWhitePieces * chessBoard.m_SquareSize.y / 2));
+                                                       deadWhitePiecesPosition.z + (chessBoard.m_DeadWhitePiecesCount * chessBoard.m_SquareSize.y / 2));
+                }                                       
             }
             else
             {
-                chessBoard.m_DeadBlackPieces++;
-                piece.transform.position = new Vector3(deadBlackPiecesPosition.x,
+                if(!chessBoard.m_DeadWhitePieces.Contains(piece.gameObject))
+                {
+                    chessBoard.m_DeadBlackPieces.Add(piece.gameObject);
+                    chessBoard.m_DeadBlackPiecesCount++;
+                    piece.transform.position = new Vector3(deadBlackPiecesPosition.x,
                                                        deadBlackPiecesPosition.y,
-                                                       deadBlackPiecesPosition.z + (chessBoard.m_DeadBlackPieces * chessBoard.m_SquareSize.y / 2));
+                                                       deadBlackPiecesPosition.z + (chessBoard.m_DeadBlackPiecesCount * chessBoard.m_SquareSize.y / 2));
+                }
             }
             piece.m_Moveable = false;
         }
