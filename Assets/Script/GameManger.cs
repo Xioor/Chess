@@ -121,10 +121,14 @@ public class GameManger : MonoBehaviour
             //Player one wins
             Winner = 1;
         }
-        else
+        else if (winningPlayer == -1)
         {
             //Player two wins.
             Winner = 2;
+        }
+        else
+        {
+            Winner = 0;
         }
         ChessBoard.getInstance().ResetAvailableSquares();
     }
@@ -136,7 +140,7 @@ public class GameManger : MonoBehaviour
         PlayAgainButton.gameObject.SetActive(true);
         MainMenuButton.gameObject.SetActive(true);
 
-        WinnerText.text = "Player " + Winner + " is the Winner!";
+        var unusedVar = Winner == 0 ? WinnerText.text = "It's a Draw!" : WinnerText.text = "Player " + Winner + " is the Winner!";
 
         //In Game UI
         TimeTillFirstMoveUI.gameObject.SetActive(false);

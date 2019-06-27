@@ -194,19 +194,8 @@ public class ChessBoard : MonoBehaviour
         ResetAvailableSquares();
 
         if (!bFakeMove)
-        {
-            if (CheckIfCheck(movedPieceOrientation * -1))
-            {
-                if (GetAllAvailableMovesFromThisOrientation(movedPieceOrientation * -1, null, false, true).Count == 0)
-                {
-                    GameManger.getInstance().EndGame(movedPieceOrientation);
-                }
-                else
-                {
-                    Debug.Log("check!");
-                }
-            }
-            ResetAvailableSquares();
+        {   
+            CheckIfWinner(movedPieceOrientation);
         }
 
         return attackedPiece;
@@ -295,12 +284,12 @@ public class ChessBoard : MonoBehaviour
         InstatiateChessPiece(m_BlackBishopPrefab, 7, 5, -1);
 
         //Instatiate Queens
-        InstatiateChessPiece(m_WhiteQueenPrefab, 0, 3, 1);
-        InstatiateChessPiece(m_BlackQueenPrefab, 7, 3, -1);
+        InstatiateChessPiece(m_WhiteQueenPrefab, 0, 4, 1);
+        InstatiateChessPiece(m_BlackQueenPrefab, 7, 4, -1);
 
         //Instatiate Kings
-        m_WhiteKingPiece = InstatiateChessPiece(m_WhiteKingPrefab, 0, 4, 1).GetComponent<King>();
-        m_BlackKingPiece = InstatiateChessPiece(m_BlackKingPrefab, 7, 4, -1).GetComponent<King>();
+        m_WhiteKingPiece = InstatiateChessPiece(m_WhiteKingPrefab, 0, 3, 1).GetComponent<King>();
+        m_BlackKingPiece = InstatiateChessPiece(m_BlackKingPrefab, 7, 3, -1).GetComponent<King>();
     }
 
     GameObject InstatiateChessPiece(GameObject m_PiecePrefab, int posX, int posY, int dir)
@@ -366,6 +355,29 @@ public class ChessBoard : MonoBehaviour
             Destroy(square);
         }
         m_AvailbleSquares.Clear();
+    }
+
+    void CheckIfWinner(int movedPieceOrientation)
+    {
+        bool bCheck = CheckIfCheck(movedPieceOrientation * -1);
+
+        if (GetAllAvailableMovesFromThisOrientation(movedPieceOrientation * -1, null, false, true).Count == 0)
+        {
+            if (bCheck)
+            {
+                GameManger.getInstance().EndGame(movedPieceOrientation);
+            }
+            else
+            {
+                GameManger.getInstance().EndGame(0);
+            }
+        }
+        else if (bCheck)
+        {
+            Debug.Log("check!");
+        }
+
+        ResetAvailableSquares();
     }
 
     public List<Vector2Int> GetAllAvailableMovesFromThisOrientation(int orientation, List<Vector2Int> squaresOverride = default(List<Vector2Int>), bool bSameColorOverride = false, bool bRemoveIfCheck = false)
