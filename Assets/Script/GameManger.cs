@@ -211,7 +211,7 @@ public class GameManger : MonoBehaviour
             if(PlayerOneTimer < 0)
             {
                 //Player two wins
-                EndGame(2);
+                EndGame(-1);
             }    
         }
         else
